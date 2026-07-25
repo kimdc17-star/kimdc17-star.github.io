@@ -12,6 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Regenerate sitemap
+        run: |
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
+          echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
+          echo '  <url><loc>https://kimdc17-star.github.io/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>' >> sitemap.xml
+          for f in posts/*.html; do
+            slug=$(basename "$f" .html)
+            echo "  <url><loc>https://kimdc17-star.github.io/posts/$slug.html</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>" >> sitemap.xml
+          done
+          echo '</urlset>' >> sitemap.xml
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
